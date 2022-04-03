@@ -36,7 +36,7 @@ app.synth()
 
 app = cdk.App()
 MyPipelineStack(app, "MyPipelineStack", 
-    env=cdk.Environment(account="111111111111", region="eu-west-1")
+    env=cdk.Environment(account="309634134411", region="eu-central-1")
 )
 
 app.synth()
