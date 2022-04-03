@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-import os
+import aws_cdk as cdk
+from my_pipeline.my_pipeline_stack import MyPipelineStack
 
 import aws_cdk as cdk
 
 from cdk_fargate.cdk_fargate_stack import CdkFargateStack
+
+
+
 
 
 app = cdk.App()
@@ -24,5 +28,15 @@ CdkFargateStack(app, "CdkFargateStack",
 
     # For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html
     )
+
+app.synth()
+
+
+
+
+app = cdk.App()
+MyPipelineStack(app, "MyPipelineStack", 
+    env=cdk.Environment(account="111111111111", region="eu-west-1")
+)
 
 app.synth()
