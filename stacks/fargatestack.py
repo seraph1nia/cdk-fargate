@@ -65,6 +65,6 @@ class FargateStack(Stack):
         fargate_service.service.connections.security_groups[0].add_ingress_rule(
             peer = ec2.Peer.ipv4(self.vpc.vpc_cidr_block),
             # dit is de fargateproxy
-            connection = ec2.Port.tcp(80),
+            connection = ec2.Port.tcp(8080),
             description="Allow http inbound from VPC"
         )
