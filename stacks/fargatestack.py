@@ -55,13 +55,16 @@ class FargateStack(Stack):
             self, "FargateService",
             cluster=self.cluster,                
             task_image_options={
-                'image': ecs.ContainerImage.from_asset("stacks")
+                'image': ecs.ContainerImage.from_asset("stacks"),
+                'container_port': 8080,
+                'container_name': 'nginx'
+                
             },
-            listener_port=containerport,
         )
         
         fargate_service.service.connections.security_groups[0].add_ingress_rule(
             peer = ec2.Peer.ipv4(self.vpc.vpc_cidr_block),
-            connection = ec2.Port.tcp(containerport),
+            # dit is de fargateproxy
+            connection = ec2.Port.tcp(80),
             description="Allow http inbound from VPC"
         )
