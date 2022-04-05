@@ -28,5 +28,8 @@ jobs:
     - name: cdk synth
       run: cdk synth
 
+    - name: cdk diff
+      run: cdk diff
+
     - name: cdk deploy
       run: cdk deploy --require-approval never
