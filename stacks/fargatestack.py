@@ -15,6 +15,10 @@ from constructs import Construct
 
 from os import path
 
+
+containerport=8080
+
+
 class FargateStack(Stack):
 
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
@@ -53,11 +57,11 @@ class FargateStack(Stack):
             task_image_options={
                 'image': ecs.ContainerImage.from_asset("stacks")
             },
-            listener_port=8080,
+            listener_port=containerport,
         )
         
         fargate_service.service.connections.security_groups[0].add_ingress_rule(
             peer = ec2.Peer.ipv4(self.vpc.vpc_cidr_block),
-            connection = ec2.Port.tcp(80),
+            connection = ec2.Port.tcp(containerport),
             description="Allow http inbound from VPC"
         )
