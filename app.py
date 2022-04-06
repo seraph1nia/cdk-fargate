@@ -8,11 +8,14 @@ env = "test"
 
 app = cdk.App()
 
-fargatestack = FargateStack(app, "FargateStack")
+fargatestack = FargateStack(app, "FargateStack", tags= {
+    'cdk': 'true'
+})
 
 # tag all resources met env
 # https://docs.aws.amazon.com/cdk/v2/guide/tagging.html
 Tags.of(fargatestack).add("env", env)
+Tags.of(fargatestack).add("stackname", fargatestack.stack_name)
 
 
 app.synth()
