@@ -8,7 +8,7 @@ env = "test"
 
 app = cdk.App()
 
-fargatestack = FargateStack(app, "FargateStack", tags= {
+fargatestack = FargateStack(app, f"{env}-FargateStack", tags= {
     'cdk': 'true'
 })
 
