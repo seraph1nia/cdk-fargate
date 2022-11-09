@@ -17,6 +17,7 @@ from constructs import Construct
 
 from aws_cdk.aws_certificatemanager import Certificate
 from aws_cdk.aws_elasticloadbalancingv2 import SslPolicy
+from aws_cdk.aws_ecr import Repository
 
 from os import path
 
@@ -29,7 +30,11 @@ class FargateStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
+
         # The code that defines your stack goes here
+
+
+        self.repository = Repository(self, "Repository")
 
         # VPC
         self.vpc = ec2.Vpc(self, "VPC-CDK",
@@ -64,11 +69,11 @@ class FargateStack(Stack):
         # )
 
         # https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_ecs_patterns/NetworkLoadBalancedFargateService.html
-        fargate_service = ecs_patterns.NetworkLoadBalancedFargateService(
+        self.fargate_service = ecs_patterns.NetworkLoadBalancedFargateService(
             self, "FargateService",
             cluster=self.cluster,                
             task_image_options={
-                'image': ecs.ContainerImage.from_asset("stacks"),
+                'image': ecs.ContainerImage.from_registry("bitnami/nginx:latest"),
                 'container_port': containerport,
                 'container_name': 'nginx'
                 
@@ -76,12 +81,16 @@ class FargateStack(Stack):
         )
         
         
-
-        fargate_service.service.connections.security_groups[0].add_ingress_rule(
+        # vanuit service zelf
+        self.testmetric = self.fargate_service.service.metric_memory_utilization()
+        self.lbmetric = self.fargate_service.load_balancer.metric_processed_bytes()
+        
+        
+        self.fargate_service.service.connections.security_groups[0].add_ingress_rule(
             peer = ec2.Peer.ipv4(self.vpc.vpc_cidr_block),
             # dit is de fargateproxy
             connection = ec2.Port.tcp(containerport),
             description="Allow http inbound from VPC"
         )
         # print public DNS
-        CfnOutput(self,"public dns",value=fargate_service.load_balancer.load_balancer_dns_name)
+        CfnOutput(self,"public dns",value=self.fargate_service.load_balancer.load_balancer_dns_name)
