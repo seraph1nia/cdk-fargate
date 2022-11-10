@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import aws_cdk as cdk
 from aws_cdk import Tags, Stack
-from stacks.fargatestack import FargateStack
-from stacks.monitoring import MonitoringStack
+from fargatestack import FargateStack
 
 
-env = "staging"
+env = "test4"
 
 app = cdk.App()
 
@@ -16,7 +15,7 @@ fargatestack = FargateStack(app, f"{env}-FargateStack", tags= {
     
 },)
 
-monitoringstack = MonitoringStack(app, f"{env}-MonitoringStack", fargatestack=fargatestack)
+# monitoringstack = MonitoringStack(app, f"{env}-MonitoringStack", fargatestack=fargatestack)
 
 # tag all resources met env
 # https://docs.aws.amazon.com/cdk/v2/guide/tagging.html

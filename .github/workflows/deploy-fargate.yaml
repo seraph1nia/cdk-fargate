@@ -3,6 +3,12 @@ on: [push]
 jobs:
   aws_cdk:
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./apps/applicatie
+
+
     steps:
 
     - name: Checkout
